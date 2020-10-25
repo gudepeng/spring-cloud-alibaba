@@ -94,12 +94,15 @@ public class NacosPropertySourceLocator implements PropertySourceLocator {
 		if (StringUtils.isEmpty(dataIdPrefix)) {
 			dataIdPrefix = env.getProperty("spring.application.name");
 		}
-
+		// 包含所有配置的对象，通过下面3个load把配置加载到对象中，返回出去
 		CompositePropertySource composite = new CompositePropertySource(
 				NACOS_PROPERTY_SOURCE_NAME);
 
+		// 加载shared-configs配置的配置
 		loadSharedConfiguration(composite);
+		// 加载extension-configs配置的配置
 		loadExtConfiguration(composite);
+		// 加载系统默认配置
 		loadApplicationConfiguration(composite, dataIdPrefix, nacosConfigProperties, env);
 
 		return composite;

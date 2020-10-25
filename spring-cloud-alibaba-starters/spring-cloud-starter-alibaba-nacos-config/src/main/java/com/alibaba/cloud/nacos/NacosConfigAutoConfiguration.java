@@ -35,6 +35,7 @@ public class NacosConfigAutoConfiguration {
 
 	@Bean
 	public NacosConfigProperties nacosConfigProperties(ApplicationContext context) {
+		// 如果context父类不为空，咱把父类的context中的NacosConfigProperties复制一份
 		if (context.getParent() != null
 				&& BeanFactoryUtils.beanNamesForTypeIncludingAncestors(
 						context.getParent(), NacosConfigProperties.class).length > 0) {

@@ -48,6 +48,7 @@ public class NacosConfigManager {
 	 */
 	static ConfigService createConfigService(
 			NacosConfigProperties nacosConfigProperties) {
+		// 通过二次判断是否为null和一个锁，保证其只能被初始化过一次
 		if (Objects.isNull(service)) {
 			synchronized (NacosConfigManager.class) {
 				try {

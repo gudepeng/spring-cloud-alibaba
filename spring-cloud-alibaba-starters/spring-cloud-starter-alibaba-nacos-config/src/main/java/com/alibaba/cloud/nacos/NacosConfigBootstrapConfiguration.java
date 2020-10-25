@@ -26,12 +26,15 @@ import org.springframework.context.annotation.Configuration;
 /**
  * @author xiaojing
  */
+// 如果spring.cloud.nacos.config.enabled为true的话，则该配置类启用。如果属性没有配置过，默认启用配置类
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnProperty(name = "spring.cloud.nacos.config.enabled", matchIfMissing = true)
 public class NacosConfigBootstrapConfiguration {
 
 	@Bean
+	// 该类没有初始化到spring容器中，则实例化到容器中
 	@ConditionalOnMissingBean
+	// 从bootstrap（.yml或.properties获取配置）
 	public NacosConfigProperties nacosConfigProperties() {
 		return new NacosConfigProperties();
 	}
@@ -44,6 +47,7 @@ public class NacosConfigBootstrapConfiguration {
 	}
 
 	@Bean
+	// 自定义配置获取
 	public NacosPropertySourceLocator nacosPropertySourceLocator(
 			NacosConfigManager nacosConfigManager) {
 		return new NacosPropertySourceLocator(nacosConfigManager);

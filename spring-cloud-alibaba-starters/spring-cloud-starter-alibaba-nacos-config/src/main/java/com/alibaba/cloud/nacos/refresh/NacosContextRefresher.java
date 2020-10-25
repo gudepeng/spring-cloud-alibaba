@@ -92,6 +92,7 @@ public class NacosContextRefresher
 	}
 
 	@Override
+	// application初始化完成后发送事件执行
 	public void onApplicationEvent(ApplicationReadyEvent event) {
 		// many Spring context
 		if (this.ready.compareAndSet(false, true)) {
@@ -108,13 +109,16 @@ public class NacosContextRefresher
 	 * register Nacos Listeners.
 	 */
 	private void registerNacosListenersForApplications() {
+		// 判断是否开启自动刷新配置
 		if (isRefreshEnabled()) {
 			for (NacosPropertySource propertySource : NacosPropertySourceRepository
 					.getAll()) {
+				// 配置该配置文件是否开启自动刷新配置
 				if (!propertySource.isRefreshable()) {
 					continue;
 				}
 				String dataId = propertySource.getDataId();
+				// 注册listener
 				registerNacosListener(propertySource.getGroup(), dataId);
 			}
 		}
@@ -130,6 +134,7 @@ public class NacosContextRefresher
 						refreshCountIncrement();
 						nacosRefreshHistory.addRefreshRecord(dataId, group, configInfo);
 						// todo feature: support single refresh for listening
+						// 重新初始化event相关的bean
 						applicationContext.publishEvent(
 								new RefreshEvent(this, null, "Refresh Nacos config"));
 						if (log.isDebugEnabled()) {
@@ -140,6 +145,7 @@ public class NacosContextRefresher
 					}
 				});
 		try {
+			// 添加listener到cacheMap中
 			configService.addListener(dataKey, groupKey, listener);
 		}
 		catch (NacosException e) {

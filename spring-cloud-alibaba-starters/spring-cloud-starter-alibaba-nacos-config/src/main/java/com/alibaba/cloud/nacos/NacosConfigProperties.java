@@ -65,6 +65,7 @@ import static com.alibaba.nacos.api.PropertyKeyConst.USERNAME;
  * @author pbting
  * @author <a href="mailto:lyuzb@lyuzb.com">lyuzb</a>
  */
+// 读取spring.cloud.nacos.config下的配置
 @ConfigurationProperties(NacosConfigProperties.PREFIX)
 public class NacosConfigProperties {
 
@@ -89,9 +90,12 @@ public class NacosConfigProperties {
 			.getLogger(NacosConfigProperties.class);
 
 	@Autowired
+	// 序列化成json的时候忽略该属性
 	@JsonIgnore
+	// 获取环境配置
 	private Environment environment;
 
+	// 初始化执行
 	@PostConstruct
 	public void init() {
 		this.overrideFromEnv();
@@ -99,6 +103,7 @@ public class NacosConfigProperties {
 
 	private void overrideFromEnv() {
 		if (StringUtils.isEmpty(this.getServerAddr())) {
+			// 获取配置中${key}路径的值
 			String serverAddr = environment
 					.resolvePlaceholders("${spring.cloud.nacos.config.server-addr:}");
 			if (StringUtils.isEmpty(serverAddr)) {

@@ -74,6 +74,7 @@ public class NacosPropertySourceBuilder {
 		Map<String, Object> p = loadNacosData(dataId, group, fileExtension);
 		NacosPropertySource nacosPropertySource = new NacosPropertySource(group, dataId,
 				p, new Date(), isRefreshable);
+		// 把配置放入到NACOS_PROPERTY_SOURCE_REPOSITORY中
 		NacosPropertySourceRepository.collectNacosPropertySource(nacosPropertySource);
 		return nacosPropertySource;
 	}
@@ -82,6 +83,7 @@ public class NacosPropertySourceBuilder {
 			String fileExtension) {
 		String data = null;
 		try {
+			// 获取配置
 			data = configService.getConfig(dataId, group, timeout);
 			if (StringUtils.isEmpty(data)) {
 				log.warn(
